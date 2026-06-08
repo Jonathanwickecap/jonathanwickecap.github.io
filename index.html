@@ -1078,6 +1078,58 @@ renderFin();
 renderBCTabs();renderBCTable();renderBCSummary();
 setTimeout(renderCharts,150);
 </script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+
+// ✅ Your config (from your screenshot)
+const firebaseConfig = {
+  apiKey: "AIzaSyAgdwyrMK04sREB_x8OaitqFMgtd-3f6_I",
+  authDomain: "my-workshop-app-a3020.firebaseapp.com",
+  projectId: "my-workshop-app-a3020",
+  storageBucket: "my-workshop-app-a3020.firebasestorage.app",
+  messagingSenderId: "976977554744",
+  appId: "1:976977554744:web:f1b5b94751172edbd065cd"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// ✅ SAVE DATA
+window.saveData = async function () {
+  const value = document.getElementById("inputField").value;
+
+  if (!value) return;
+
+  await addDoc(collection(db, "entries"), {
+    text: value,
+    created: Date.now()
+  });
+
+  document.getElementById("inputField").value = "";
+};
+
+// ✅ LIVE DATA (REAL-TIME SYNC)
+const list = document.getElementById("dataList");
+
+onSnapshot(collection(db, "entries"), (snapshot) => {
+  list.innerHTML = "";
+
+  snapshot.forEach((doc) => {
+    const item = document.createElement("li");
+    item.textContent = doc.data().text;
+    list.appendChild(item);
+  });
+});
+</script>
+
+<h2>Workshop Inputs</h2>
+
+<input id="inputField" placeholder="Enter idea..." />
+<button onclick="saveData()">Save</button>
+
+<ul id="dataList"></ul>
+
 </body>
 </html>
 
