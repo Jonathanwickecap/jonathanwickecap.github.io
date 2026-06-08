@@ -1,0 +1,1090 @@
+
+                        <!DOCTYPE html>
+                        <html lang="en">
+                        <head>
+                            <meta charset="UTF-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+							<style>
+								body {
+									background-color: white; /* Ensure the iframe has a white background */
+								}
+
+								
+							</style>
+                        </head>
+                        <body>
+                            <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ProMES — Go-Live Options Cockpit</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root{
+  --roche-blue:#0066CC;--roche-dark:#003366;--roche-light:#E8F0FA;
+  --text-p:#1A2332;--text-s:#546E7A;--text-m:#90A4AE;
+  --bg-page:#F4F6F9;--bg-card:#FFFFFF;--bg-sec:#F0F4FA;
+  --bd-l:#DDE3EB;--bd-m:#C8D8EE;
+  --green:#2E7D32;--gbg:#E8F5E9;--gbd:#A5D6A7;
+  --lgreen:#7CB342;--lgbg:#F1F8E9;--lgbd:#C5E1A5;
+  --yellow:#F57F17;--ybg:#FFFDE7;--ybd:#FFE082;
+  --orange:#E65100;--obg:#FFF3E0;--obd:#FFCC80;
+  --red:#C62828;--rbg:#FFEBEE;--rbd:#EF9A9A;
+  --gray:#607D8B;--gabg:#ECEFF1;--gabd:#B0BEC5;
+  --font:'Roche Sans','Segoe UI',system-ui,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);background:var(--bg-page);color:var(--text-p);font-size:13px;line-height:1.5}
+
+.hdr{background:linear-gradient(135deg,var(--roche-dark)0%,var(--roche-blue)100%);color:#fff;padding:13px 26px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.hdr-title{font-size:17px;font-weight:700}.hdr-sub{font-size:11px;opacity:.75;margin-top:2px}
+.hdr-logo{font-size:24px;font-weight:900;letter-spacing:-1px;opacity:.95}
+.hdr-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:5px;padding:2px 10px;font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:#fff}
+.hdr-actions{display:flex;gap:8px}
+.btn{padding:6px 14px;border-radius:5px;font-size:12px;font-weight:600;cursor:pointer;border:none;transition:all .15s;font-family:var(--font)}
+.btn-p{background:#fff;color:var(--roche-blue)}.btn-p:hover{background:var(--roche-light)}
+.btn-s{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.4)}.btn-s:hover{background:rgba(255,255,255,.25)}
+
+.tab-bar{background:var(--bg-card);border-bottom:2px solid var(--bd-l);padding:0 20px;display:flex;overflow-x:auto;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.tab{padding:11px 18px;cursor:pointer;font-size:12px;font-weight:600;color:var(--text-m);border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap;transition:all .15s;user-select:none}
+.tab:hover{color:var(--roche-blue)}.tab.active{color:var(--roche-blue);border-bottom-color:var(--roche-blue)}
+
+.main{padding:16px;max-width:1900px;margin:0 auto}
+.tc{display:none}.tc.active{display:block}
+
+.sec{background:var(--bg-card);border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,.08);margin-bottom:16px;overflow:hidden}
+.sec-hdr{background:var(--roche-light);padding:9px 15px;border-bottom:1px solid var(--bd-m);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px}
+.sec-title{font-size:13px;font-weight:700;color:var(--roche-dark)}
+.sec-body{padding:12px 15px;overflow-x:auto}
+.info-box{background:var(--roche-light);border-left:4px solid var(--roche-blue);border-radius:5px;padding:9px 13px;font-size:11.5px;margin-bottom:14px;line-height:1.5}
+
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:11px;color:var(--text-s);align-items:center}
+.leg-item{display:flex;align-items:center;gap:5px}
+.leg-box{width:14px;height:14px;border-radius:3px;flex-shrink:0}
+
+.rag{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700}
+.r-green{background:var(--gbg);color:var(--green);border:1px solid var(--gbd)}
+.r-lgreen{background:var(--lgbg);color:var(--lgreen);border:1px solid var(--lgbd)}
+.r-orange{background:var(--obg);color:var(--orange);border:1px solid var(--obd)}
+.r-red{background:var(--rbg);color:var(--red);border:1px solid var(--rbd)}
+.r-gray{background:var(--gabg);color:var(--gray);border:1px solid var(--gabd)}
+.tag{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700}
+.tg{background:var(--gbg);color:var(--green)}.tr{background:var(--rbg);color:var(--red)}
+.ty{background:var(--ybg);color:var(--yellow)}.tn{background:var(--gabg);color:var(--gray)}
+
+.opt-sel{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}
+.opt-btn{padding:5px 13px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;border:2px solid var(--bd-l);background:#fff;color:var(--text-s);transition:all .15s;font-family:var(--font)}
+.opt-btn.active{color:#fff;border-color:transparent}
+
+/* ══ SITE IMPACT TABLE ══ */
+.sit-table{width:100%;border-collapse:collapse;font-size:11px;table-layout:auto}
+.sit-table th{background:var(--roche-dark);color:#fff;padding:7px 6px;font-size:10px;font-weight:700;white-space:nowrap;text-align:center;border-right:1px solid rgba(255,255,255,.15)}
+.sit-table th.lh{text-align:left;background:var(--bg-sec);color:var(--roche-dark)}
+.sit-table td{padding:5px 5px;border-bottom:1px solid #EEF1F5;vertical-align:middle;text-align:center}
+.sit-table td.site-td{background:var(--roche-light);font-weight:700;font-size:11px;color:var(--roche-dark);text-align:left;padding:7px 8px;white-space:nowrap;vertical-align:top;padding-top:10px}
+.sit-table td.line-td{text-align:left;padding:5px 8px;font-size:11px;color:var(--text-s)}
+.sit-table tr:hover td{background:#F8FAFD}
+.sit-table td.risk-box-td{background:#F5F0FF!important;vertical-align:top;padding:6px 8px;min-width:195px}
+
+/* Score select */
+.ss{border:none;background:transparent;font-size:11px;font-weight:700;cursor:pointer;font-family:var(--font);padding:1px 0;width:40px;text-align:center}
+.ss:focus{outline:none}
+
+/* Avg pill */
+.avg-pill{display:inline-block;min-width:36px;height:21px;border-radius:11px;font-size:11px;font-weight:700;line-height:21px;text-align:center;padding:0 4px}
+.ap-5{background:var(--gbg);color:var(--green);border:1px solid var(--gbd)}
+.ap-4{background:var(--lgbg);color:var(--lgreen);border:1px solid var(--lgbd)}
+.ap-3{background:var(--obg);color:var(--orange);border:1px solid var(--obd)}
+.ap-2{background:var(--rbg);color:var(--red);border:1px solid var(--rbd)}
+
+/* Risk pill */
+.rsk-pill{display:inline-block;min-width:38px;height:21px;border-radius:11px;font-size:10px;font-weight:700;line-height:21px;text-align:center;padding:0 5px}
+.rsk-low{background:var(--gbg);color:var(--green);border:1px solid var(--gbd)}
+.rsk-med{background:var(--ybg);color:var(--yellow);border:1px solid var(--ybd)}
+.rsk-high{background:var(--obg);color:var(--orange);border:1px solid var(--obd)}
+.rsk-crit{background:var(--rbg);color:var(--red);border:1px solid var(--rbd)}
+
+.pi-sel{border:1px solid var(--bd-m);border-radius:4px;padding:2px 3px;font-size:10px;font-weight:600;width:46px;cursor:pointer;font-family:var(--font)}
+.pi-sel:focus{outline:none;border-color:var(--roche-blue)}
+
+/* Cell bg by score */
+.sit-table td.d-5{background:var(--gbg)!important}
+.sit-table td.d-4{background:var(--lgbg)!important}
+.sit-table td.d-3{background:var(--ybg)!important}
+.sit-table td.d-2{background:var(--obg)!important}
+.sit-table td.d-1{background:var(--rbg)!important}
+
+/* Time slider */
+.time-cell-wrap{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:100px}
+.delay-slider{-webkit-appearance:none;appearance:none;width:100%;height:5px;border-radius:3px;outline:none;cursor:pointer}
+.delay-slider::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;border-radius:50%;background:#fff;border:2px solid #555;cursor:pointer}
+.delay-label{font-size:9px;font-weight:700;white-space:nowrap}
+
+/* Cost input wrapper */
+.cost-wrap{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:88px}
+.cost-inp{
+  border:1px solid var(--bd-m);border-radius:4px;padding:3px 5px;
+  font-size:11px;font-weight:700;width:80px;text-align:right;
+  font-family:var(--font);transition:all .2s
+}
+.cost-inp:focus{outline:none;border-color:var(--roche-blue)}
+/* cost input colour states */
+.ci-5{background:var(--gbg);color:var(--green);border-color:var(--gbd)}
+.ci-4{background:var(--lgbg);color:var(--lgreen);border-color:var(--lgbd)}
+.ci-3{background:var(--ybg);color:var(--yellow);border-color:var(--ybd)}
+.ci-2{background:var(--obg);color:var(--orange);border-color:var(--obd)}
+.ci-1{background:var(--rbg);color:var(--red);border-color:var(--rbd)}
+.cost-score-lbl{font-size:9px;font-weight:700;white-space:nowrap}
+
+/* SC button */
+.sf-btn{padding:3px 7px;border-radius:4px;font-size:10px;font-weight:700;cursor:pointer;border:1px solid;font-family:var(--font);white-space:nowrap;transition:all .15s}
+.sf-off{background:var(--gabg);color:var(--gray);border-color:var(--gabd)}
+.sf-on{background:var(--rbg);color:var(--red);border-color:var(--rbd)}
+
+/* Site risk box */
+.site-risk-box{border:1px solid var(--bd-m);border-radius:6px;padding:8px;background:white;min-width:188px}
+.srb-title{font-size:10px;font-weight:700;margin-bottom:5px;text-transform:uppercase;letter-spacing:.4px}
+.srb-label{font-size:9px;color:var(--text-m);font-weight:600;margin-bottom:2px;text-transform:uppercase;letter-spacing:.3px}
+textarea.srb-note{border:1px solid var(--bd-l);border-radius:4px;padding:3px 6px;font-size:10px;font-family:var(--font);resize:vertical;width:100%;min-height:52px;line-height:1.4;color:var(--text-p);margin-bottom:4px}
+textarea.srb-note:focus{outline:none;border-color:var(--roche-blue)}
+.srb-scores{display:flex;gap:4px;flex-wrap:wrap;margin-top:3px}
+
+/* ══ COCKPIT ══ */
+.kpi-table{width:100%;border-collapse:collapse;font-size:11.5px}
+.kpi-table th{background:var(--roche-dark);color:#fff;padding:8px 12px;text-align:center;font-size:11px;font-weight:700;border-right:1px solid rgba(255,255,255,.15)}
+.kpi-table th.rh{background:var(--bg-sec);color:var(--roche-dark);text-align:left;width:180px}
+.kpi-table td{padding:7px 12px;border-bottom:1px solid #EEF1F5;border-right:1px solid #EEF1F5;text-align:center;vertical-align:middle}
+.kpi-table td.rh{text-align:left;font-weight:600;font-size:11px;background:var(--bg-sec)}
+.kpi-table tr:hover td{background:#F8FAFD}
+.kpi-num{font-size:17px;font-weight:700}
+.emp-cell{font-size:10px;color:var(--text-s);max-width:180px;white-space:normal;line-height:1.3;text-align:left;padding:5px 10px!important}
+
+.hm-table{border-collapse:collapse;font-size:11px;width:100%}
+.hm-table th{background:var(--roche-dark);color:#fff;padding:7px 10px;text-align:center;font-weight:700;white-space:nowrap;border-right:1px solid rgba(255,255,255,.15)}
+.hm-table th.lh{background:var(--bg-sec);color:var(--roche-dark);text-align:left}
+.hm-table td{border:1px solid #E0E0E0;vertical-align:middle;text-align:center;padding:0}
+.hm-table td.site-c{background:var(--roche-light);font-weight:700;font-size:11px;color:var(--roche-dark);padding:6px 10px;white-space:nowrap;text-align:left}
+.hm-table td.line-c{background:#FAFAFA;font-size:11px;color:var(--text-s);padding:6px 10px;text-align:left}
+.hm-cell{min-width:110px;height:36px}
+.hm-inner{width:100%;height:36px;display:flex;align-items:center;justify-content:center;gap:4px;font-weight:700;font-size:12px;color:#fff;padding:0 6px}
+.hm-5{background:var(--green)}.hm-4{background:var(--lgreen)}.hm-3{background:var(--orange)}.hm-1{background:var(--red)}
+.hm-gray{background:var(--gabg);color:var(--gray)}
+.hm-rsk{width:9px;height:9px;border-radius:50%;flex-shrink:0;border:1.5px solid rgba(255,255,255,.7)}
+.hm-rsk-low{background:#fff;opacity:.5}.hm-rsk-med{background:#FFE082}
+.hm-rsk-high{background:#FF8A65}.hm-rsk-crit{background:#EF9A9A}
+/* SC icon in heatmap */
+.hm-sc{font-size:9px;line-height:1}
+
+/* Financial */
+.fin-input{border:1px solid var(--bd-m);border-radius:4px;padding:4px 6px;font-size:11.5px;width:82px;text-align:right;font-family:var(--font)}
+.fin-input:focus{outline:none;border-color:var(--roche-blue)}
+td.comp{background:var(--bg-sec);font-weight:700}
+td.nv{color:var(--green);font-weight:700}td.pv{color:var(--red);font-weight:700}
+.bc-di{border:1px solid var(--obd);border-radius:4px;padding:3px 5px;font-size:11px;width:72px;text-align:right;background:var(--obg);font-family:var(--font);color:var(--orange)}
+.bc-di:focus{outline:none;border-color:var(--orange)}
+.opt-tab-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.otab{padding:5px 12px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid var(--bd-l);background:#fff;color:var(--text-s);transition:all .15s;font-family:var(--font)}
+.otab.active{color:#fff}
+.bc-sum{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+.bc-si{background:var(--roche-dark);color:#fff;border-radius:8px;padding:12px;text-align:center}
+.bc-sl{font-size:10px;opacity:.7;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.bc-sv{font-size:20px;font-weight:700}
+.yt th{font-size:10px;text-align:right;padding:5px 7px;background:var(--bg-sec);color:var(--roche-dark);font-weight:700;border-bottom:2px solid var(--bd-m)}
+.yt td{font-size:11px;text-align:right;padding:4px 7px;border-bottom:1px solid #EEF1F5}
+.grp td{background:var(--roche-light)!important;font-weight:700;color:var(--roche-dark);font-size:10px;text-transform:uppercase;letter-spacing:.5px}
+.cg{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.cw{background:var(--bg-card);border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,.08);padding:13px}
+.ct{font-size:12px;font-weight:700;color:var(--roche-dark);margin-bottom:9px}
+.ch{position:relative;height:270px}.cf{grid-column:1/-1}
+@media print{
+  .tab-bar,.hdr-actions,.btn,.opt-sel,.opt-tab-bar{display:none!important}
+  .tc{display:block!important;page-break-before:always}
+  .sec{box-shadow:none;border:1px solid #DDD}body{background:#fff}
+}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div>
+    <div class="hdr-title">ProMES — Go-Live Options Cockpit</div>
+    <div class="hdr-sub">Site Impact Assessment · Green Path Analysis · Workshop Tool · May 2026</div>
+  </div>
+  <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+    <div class="hdr-badge">ProMES Program</div>
+    <div style="font-size:10px;opacity:.65">Drug Substance Manufacturing</div>
+  </div>
+  <div class="hdr-actions">
+    <button class="btn btn-s" onclick="resetAll()">↺ Reset</button>
+    <button class="btn btn-p" onclick="downloadHTML()">⬇ Download</button>
+    <button class="btn btn-s" onclick="window.print()">🖨 Print</button>
+  </div>
+  <div class="hdr-logo">Roche</div>
+</header>
+
+<nav class="tab-bar">
+  <div class="tab active" data-tab="cockpit"    onclick="switchTab('cockpit')">🎯 Cockpit &amp; Green Path</div>
+  <div class="tab"        data-tab="siteimpact" onclick="switchTab('siteimpact')">🏭 Site Impact Assessment</div>
+  <div class="tab"        data-tab="financial"  onclick="switchTab('financial')">💶 Financial Detail</div>
+  <div class="tab"        data-tab="bc"         onclick="switchTab('bc')">📋 Business Case Impact</div>
+  <div class="tab"        data-tab="charts"     onclick="switchTab('charts')">📈 Charts</div>
+</nav>
+
+<main class="main">
+
+<!-- ════ COCKPIT ════ -->
+<div class="tc active" id="tab-cockpit">
+  <div class="info-box">
+    <strong>Green Path:</strong> Avg of Time + 7 dimensions + OpEx cost score + CapEx cost score (10 factors total).
+    Risk Score (P×I) shown as dot — does not affect avg.
+    <span style="background:var(--green);color:#fff;padding:1px 7px;border-radius:3px;font-size:10px;font-weight:700">≥4.0 Green</span>
+    <span style="background:var(--lgreen);color:#fff;padding:1px 7px;border-radius:3px;font-size:10px;font-weight:700">3.5–4.0 Lt.Green</span>
+    <span style="background:var(--orange);color:#fff;padding:1px 7px;border-radius:3px;font-size:10px;font-weight:700">&lt;3.5 Orange</span>
+    <span style="background:var(--red);color:#fff;padding:1px 7px;border-radius:3px;font-size:10px;font-weight:700">&lt;2 Red</span>
+    &nbsp; 🚚 = Supply Chain conflict flagged.
+  </div>
+  <div class="sec">
+    <div class="sec-hdr"><div class="sec-title">KPI Score Box — All Options</div></div>
+    <div class="sec-body"><table class="kpi-table"><thead><tr id="kpi-hdr"></tr></thead><tbody id="kpi-body"></tbody></table></div>
+  </div>
+  <div class="sec">
+    <div class="sec-hdr">
+      <div class="sec-title">Mini-Heatmap — Green Path per Site / Line</div>
+      <div class="legend">
+        <div class="leg-item"><div class="leg-box" style="background:var(--green)"></div>≥4.0 Green</div>
+        <div class="leg-item"><div class="leg-box" style="background:var(--lgreen)"></div>3.5–4.0 Lt.Green</div>
+        <div class="leg-item"><div class="leg-box" style="background:var(--orange)"></div>&lt;3.5 Orange</div>
+        <div class="leg-item"><div class="leg-box" style="background:var(--red)"></div>&lt;2.0 Red</div>
+        <div class="leg-item">● Risk dot &nbsp; 🚚 SC conflict</div>
+      </div>
+    </div>
+    <div class="sec-body" style="overflow-x:auto">
+      <table class="hm-table"><thead><tr id="hm-hdr"></tr></thead><tbody id="hm-body"></tbody></table>
+    </div>
+  </div>
+</div>
+
+<!-- ════ SITE IMPACT ════ -->
+<div class="tc" id="tab-siteimpact">
+  <div class="info-box">
+    <strong>Time slider:</strong> 0–36m → score (≤6m=5, ≤12m=4, ≤18m=3, ≤24m=2, &gt;24m=1).
+    <strong>OpEx / CapEx cost boxes:</strong> enter additional cost in kCHF — score auto-updates live
+    (OpEx: 0=5, &lt;500=4, &lt;2k=3, &lt;5k=2, ≥5k=1 · CapEx: 0=5, &lt;2k=4, &lt;10k=3, &lt;30k=2, ≥30k=1).
+    All 10 factors feed into the avg. <strong>Risk P×I</strong> separate, not in avg. <strong>One risk box per site</strong> on the far right. 🚚 SC flag shown in cockpit.
+  </div>
+  <div class="opt-sel" id="opt-sel"></div>
+  <div class="sec">
+    <div class="sec-hdr">
+      <div class="sec-title" id="sit-title">Option 1: Full Scope / Rockwell</div>
+      <div class="legend">
+        <div class="leg-item"><div class="leg-box" style="background:var(--gbg);border:1px solid var(--gbd)"></div>4–5 Low</div>
+        <div class="leg-item"><div class="leg-box" style="background:var(--lgbg);border:1px solid var(--lgbd)"></div>3.5–4</div>
+        <div class="leg-item"><div class="leg-box" style="background:var(--obg);border:1px solid var(--obd)"></div>&lt;3.5</div>
+        <div class="leg-item"><div class="leg-box" style="background:var(--rbg);border:1px solid var(--rbd)"></div>&lt;2</div>
+      </div>
+    </div>
+    <div class="sec-body" style="overflow-x:auto">
+      <table class="sit-table"><thead><tr id="sit-hdr"></tr></thead><tbody id="sit-body"></tbody></table>
+    </div>
+  </div>
+</div>
+
+<!-- ════ FINANCIAL ════ -->
+<div class="tc" id="tab-financial">
+  <div class="info-box">Enter values in <strong>kCHF</strong>. Baseline CapEx = approved budget per option (enter manually). Net = Total CapEx + ΔOpEx 5y − Cost Avoidance.</div>
+  <div id="fin-wrap"></div>
+</div>
+
+<!-- ════ BC ════ -->
+<div class="tc" id="tab-bc">
+  <div class="info-box"><strong>Business Case Impact.</strong> Enter delta per BC element. Revised 10y saving calculated live.</div>
+  <div class="bc-sum">
+    <div class="bc-si"><div class="bc-sl">Original 10y Saving</div><div class="bc-sv">61,636</div><div style="font-size:10px;opacity:.6;margin-top:2px">kCHF</div></div>
+    <div class="bc-si"><div class="bc-sl">Option Δ</div><div class="bc-sv" id="bc-dv" style="color:#FDE68A">—</div><div style="font-size:10px;opacity:.6;margin-top:2px">kCHF</div></div>
+    <div class="bc-si"><div class="bc-sl">Revised 10y</div><div class="bc-sv" id="bc-rv">61,636</div><div style="font-size:10px;opacity:.6;margin-top:2px">kCHF</div></div>
+    <div class="bc-si"><div class="bc-sl">BC Preservation</div><div class="bc-sv" id="bc-pv" style="color:#86EFAC">100%</div><div style="font-size:10px;opacity:.6;margin-top:2px">vs. original</div></div>
+  </div>
+  <div class="sec">
+    <div class="sec-hdr"><div class="sec-title">Select Option</div><div class="opt-tab-bar" id="bc-tabs"></div></div>
+    <div class="sec-body" style="overflow-x:auto">
+      <table class="yt" style="width:100%;border-collapse:collapse" id="bc-tbl">
+        <thead><tr>
+          <th style="text-align:left;width:175px">BC Element</th><th style="text-align:left;width:62px">Type</th>
+          <th style="width:90px">Orig 10y</th><th style="width:72px;background:var(--obg);color:var(--orange)">Opt Δ</th>
+          <th style="width:90px;background:var(--ybg)">Revised</th>
+          <th>2025</th><th>2026</th><th>2027</th><th>2028</th><th>2029</th>
+          <th>2030</th><th>2031</th><th>2032</th><th>2033</th><th>2034</th>
+          <th style="width:180px;text-align:left">Comment</th>
+        </tr></thead>
+        <tbody id="bc-body"></tbody><tfoot id="bc-foot"></tfoot>
+      </table>
+    </div>
+  </div>
+  <div class="cw" style="margin-top:12px">
+    <div class="ct">BC Preservation — Revised 10y Saving per Option (kCHF)</div>
+    <div class="ch"><canvas id="bcChart"></canvas></div>
+  </div>
+</div>
+
+<!-- ════ CHARTS ════ -->
+<div class="tc" id="tab-charts">
+  <div class="cg">
+    <div class="cw cf">
+      <div class="ct">Green Path — Avg Impact Score per Option (higher = less impact)</div>
+      <div class="ch" style="height:300px"><canvas id="lineChart"></canvas></div>
+    </div>
+    <div class="cw">
+      <div class="ct">RAG Distribution per Option</div>
+      <div class="ch"><canvas id="ragChart"></canvas></div>
+    </div>
+    <div class="cw">
+      <div class="ct">Financial Delta (kCHF)</div>
+      <div class="ch"><canvas id="finChart"></canvas></div>
+    </div>
+  </div>
+</div>
+
+</main>
+<script>
+// ═══════════════════════
+// CHART DEFAULTS
+// ═══════════════════════
+const toSolid=h=>h+'CC';
+Chart.defaults.font.family="'Segoe UI',system-ui,sans-serif";
+Chart.defaults.font.size=11;Chart.defaults.color='#546E7A';
+const RG={color:'#EEF1F5'},NG={display:false};
+const LB={position:'bottom',labels:{font:{size:10},boxWidth:10,padding:12}};
+
+// ═══════════════════════
+// OPTIONS
+// ═══════════════════════
+const OPTIONS=[
+  {id:'o1',label:'Option 1',name:'Full Scope / Rockwell',  short:'+12–24m',  color:'#1565C0'},
+  {id:'o2',label:'Option 2',name:'Staggered Releases',     short:'+6–12m',   color:'#0288D1'},
+  {id:'o3',label:'Option 3',name:'Reduced / Phased Scope', short:'~Orig TL', color:'#6A1B9A'},
+  {id:'o4',label:'Option 4',name:'Change Vendor',          short:'TBD',      color:'#E65100'},
+  {id:'o5',label:'Option 5',name:"Site's Own Decision",    short:'Site dep.',color:'#2E7D32'},
+  {id:'o6',label:'Option 6',name:'Stop Deploy 3+ Jahre',   short:'3+ yr fr.',color:'#546E7A'},
+];
+
+// ═══════════════════════
+// DIMENSIONS (regular 1-5 selects)
+// ═══════════════════════
+const DIMS=[
+  {id:'techbb', label:'Tech BB & LC',   desc:'Tech Backbone & Lifecycle: Aspire/EWM/DCS/OT + 20y roadmap'},
+  {id:'ops',    label:'Operational',    desc:'Operational impact during and after deployment'},
+  {id:'schsup', label:'Sched/Supply',   desc:'Schedule/Supply impact on SCM planning and production windows'},
+  {id:'fin',    label:'Financial',      desc:'Net financial impact vs. baseline'},
+  {id:'scope',  label:'Scope',          desc:'Completeness of scope delivered'},
+  {id:'harm',   label:'Harmonization',  desc:'Contribution to 3→1 platform goal'},
+  {id:'digital',label:'Digital',        desc:'Digital use-case enablement'},
+];
+
+// ═══════════════════════
+// COST → SCORE THRESHOLDS
+// Score: 5=no impact(0), 4=low, 3=moderate, 2=high, 1=critical
+// ═══════════════════════
+const OPEX_T=[
+  {max:0,       score:5,cls:'d-5',icls:'ci-5',lbl:'No OpEx impact'},
+  {max:500,     score:4,cls:'d-4',icls:'ci-4',lbl:'Low (<500 kCHF)'},
+  {max:2000,    score:3,cls:'d-3',icls:'ci-3',lbl:'Moderate (<2,000)'},
+  {max:5000,    score:2,cls:'d-2',icls:'ci-2',lbl:'High (<5,000)'},
+  {max:Infinity,score:1,cls:'d-1',icls:'ci-1',lbl:'Critical (≥5,000)'},
+];
+const CAPEX_T=[
+  {max:0,       score:5,cls:'d-5',icls:'ci-5',lbl:'No CapEx impact'},
+  {max:2000,    score:4,cls:'d-4',icls:'ci-4',lbl:'Low (<2,000 kCHF)'},
+  {max:10000,   score:3,cls:'d-3',icls:'ci-3',lbl:'Moderate (<10,000)'},
+  {max:30000,   score:2,cls:'d-2',icls:'ci-2',lbl:'High (<30,000)'},
+  {max:Infinity,score:1,cls:'d-1',icls:'ci-1',lbl:'Critical (≥30,000)'},
+];
+
+function getCostBand(val,thresholds){
+  const v=Math.max(0,parseFloat(val)||0);
+  for(const t of thresholds)if(v<=t.max)return t;
+  return thresholds[thresholds.length-1];
+}
+
+const PI_VALS=[2,4,6,8,10];
+
+// ═══════════════════════
+// SITES
+// ═══════════════════════
+const SITES=[
+  {id:'rsto',  name:'RSTO',   capex:'22 mCHF',  color:'#1565C0',lines:['B1','B10','W&D']},
+  {id:'pnz',   name:'PNZ',    capex:'31.4 mCHF',color:'#6A1B9A',lines:['PS1 (B401)','PS2 (B401)','PS4 (B402)','BII (B201)','BIII (B301)']},
+  {id:'bsl',   name:'BSL',    capex:'31.1 mCHF',color:'#2E7D32',lines:['B91','B95']},
+  {id:'ocn',   name:'OCN',    capex:'31 mCHF',  color:'#E65100',lines:['SUT','Stainless']},
+  {id:'ssf',   name:'SSF',    capex:'14 mCHF',  color:'#AD1457',lines:['CSC']},
+  {id:'promes',name:'ProMES', capex:'',         color:'#546E7A',lines:['Core']},
+];
+
+// ═══════════════════════
+// BC DATA
+// ═══════════════════════
+const BCE=[
+  {id:'b1', label:'Maintenance for Licences',  type:'OpEx',    s10:1713,  d:[0,-50,-13,25,-175,225,425,425,425,425]},
+  {id:'b2', label:'Vendor Release Consulting', type:'OpEx',    s10:917,   d:[0,0,0,50,117,150,150,150,150,150]},
+  {id:'b3', label:'Integrations',              type:'OpEx',    s10:380,   d:[38,38,38,38,38,38,38,38,38,38]},
+  {id:'b4', label:'MES Support (L2/L3)',        type:'OpEx',    s10:1500,  d:[0,0,30,60,60,270,270,270,270,270]},
+  {id:'b5', label:'Tech Transfer',             type:'Benefit', s10:32500, d:[0,0,0,0,0,6500,6500,6500,6500,6500]},
+  {id:'b6', label:'DCS Maintenance',           type:'OpEx',    s10:0,     d:[0,0,0,0,0,0,0,0,0,0]},
+  {id:'b7', label:'Site LC Mgmt (MES)',         type:'OpEx',    s10:0,     d:[0,0,0,0,0,0,0,0,0,0]},
+  {id:'b8', label:'Site LC Mgmt (DCS)',         type:'OpEx',    s10:0,     d:[0,0,0,0,0,0,0,0,0,0]},
+  {id:'b9', label:'MES Enhancement',           type:'OpEx',    s10:23228, d:[0,971,1300,355,2620,3202,3770,3670,3670,3670]},
+  {id:'b10',label:'Training & Onboarding',     type:'OpEx',    s10:1398,  d:[265,119,110,141,122,122,122,132,132,132]},
+];
+const BC_TOT=BCE.reduce((a,e)=>a+e.s10,0);
+
+// ═══════════════════════
+// STATE
+// All stored by key strings to avoid DOM traversal bugs
+// Key: sid_l_oid  e.g. "rsto_B1_o1"
+// ═══════════════════════
+let dimScores={};     // dimScores["rsto_B1_o1_techbb"] = 1-5
+let delayMonths={};   // delayMonths["rsto_B1_o1"] = 0-36
+let opexCost={};      // opexCost["rsto_B1_o1"] = kCHF
+let capexCost={};     // capexCost["rsto_B1_o1"] = kCHF
+let riskP={};         // riskP["rsto_B1_o1"] = 2-10
+let riskI={};         // riskI["rsto_B1_o1"] = 2-10
+let siteRiskNote={};  // siteRiskNote["rsto_o1"] = string
+let supplyFlag={};    // supplyFlag["rsto_B1_o1"] = bool
+let finData={};
+let bcData={};
+let kpiMeta={};
+let curOpt='o1',curBcOpt='o1';
+
+function lineKey(sid,l,oid){return`${sid}||${l}||${oid}`;}
+function dimKey(sid,l,oid,did){return`${sid}||${l}||${oid}||${did}`;}
+function siteKey(sid,oid){return`${sid}||${oid}`;}
+
+function initState(){
+  OPTIONS.forEach(o=>{
+    finData[o.id]={baseCapex:0,capexM:0,capexI:0,capexE:0,capexF:0,opex5:0,avoid:0,confid:'Grob',assumption:''};
+    bcData[o.id]={};BCE.forEach(e=>{bcData[o.id][e.id]={d:0,c:''};});
+    kpiMeta[o.id]={timeline:'Nein',harm:'Nein',empf:''};
+  });
+  finData['o1'].baseCapex=129500;finData['o2'].baseCapex=129500;
+  finData['o3'].baseCapex=129500;finData['o4'].baseCapex=129500;
+  kpiMeta['o1'].harm='Ja';kpiMeta['o2'].harm='Ja';
+  kpiMeta['o1'].empf='Shortlisted – Workshop-Präferenz';
+  kpiMeta['o2'].empf='Shortlisted – Harmonization möglich';
+  kpiMeta['o3'].empf='Shortlisted – höchste Komplexität';
+  kpiMeta['o4'].empf='Rejected – kein Knowhow';
+  kpiMeta['o5'].empf='Out of options – verletzt Mandat';
+  kpiMeta['o6'].empf='Out of options – EoL & Compliance-Risiko';
+
+  SITES.forEach(s=>{
+    OPTIONS.forEach(o=>{
+      siteRiskNote[siteKey(s.id,o.id)]='';
+      s.lines.forEach(l=>{
+        const lk=lineKey(s.id,l,o.id);
+        DIMS.forEach(d=>{dimScores[dimKey(s.id,l,o.id,d.id)]=3;});
+        delayMonths[lk]=12;
+        opexCost[lk]=0;
+        capexCost[lk]=0;
+        riskP[lk]=4;
+        riskI[lk]=4;
+        supplyFlag[lk]=false;
+      });
+    });
+  });
+
+  // Seed realistic defaults
+  function sd(sid,l,oid,dims,dm,oc,cc,p,i,sf,rn){
+    const lk=lineKey(sid,l,oid);
+    if(dims)Object.entries(dims).forEach(([did,v])=>{dimScores[dimKey(sid,l,oid,did)]=v;});
+    if(dm!==undefined)delayMonths[lk]=dm;
+    if(oc!==undefined)opexCost[lk]=oc;
+    if(cc!==undefined)capexCost[lk]=cc;
+    if(p)riskP[lk]=p;if(i)riskI[lk]=i;
+    if(sf!==undefined)supplyFlag[lk]=sf;
+  }
+  ['B91','B95'].forEach(l=>{
+    sd('bsl',l,'o1',{techbb:4,ops:4,schsup:4,fin:3,scope:4,harm:5,digital:4},8,150,500,2,2);
+    sd('bsl',l,'o2',{techbb:4,ops:4,schsup:4,fin:3,scope:4,harm:5,digital:4},8,150,500,2,2);
+    sd('bsl',l,'o6',{techbb:2,ops:3,schsup:3,fin:3,scope:2,harm:1,digital:2},0,800,8000,8,10);
+  });
+  siteRiskNote[siteKey('bsl','o6')]='SIMATIC IT EoL — GxP compliance risk. No viable 20y roadmap. Audit exposure significant.';
+  ['B1','B10','W&D'].forEach(l=>{
+    sd('rsto',l,'o1',{techbb:4,ops:3,schsup:3,fin:3,scope:4,harm:5,digital:4},14,200,1000,4,4);
+    sd('rsto',l,'o6',{techbb:2,ops:3,schsup:2,fin:3,scope:2,harm:1,digital:2},0,1200,3000,10,8);
+  });
+  siteRiskNote[siteKey('rsto','o6')]='RSTO paper-based — no digital traceability, elevated audit risk.';
+  ['SUT','Stainless'].forEach(l=>{
+    sd('ocn',l,'o5',{techbb:2,ops:4,schsup:4,fin:3,scope:3,harm:1,digital:3},6,300,500,6,6);
+  });
+  siteRiskNote[siteKey('ocn','o5')]='No harmonization — long-term fragmentation risk.';
+  finData['o6'].capexE=8000;finData['o6'].assumption='EoL remediation estimate only';
+}
+
+// ═══════════════════════
+// COMPUTED
+// ═══════════════════════
+function dimAvg(sid,l,oid){
+  const lk=lineKey(sid,l,oid);
+  const ts=delayToScore(delayMonths[lk]??12);
+  const reg=DIMS.map(d=>dimScores[dimKey(sid,l,oid,d.id)]||3);
+  const os=getCostBand(opexCost[lk]||0,OPEX_T).score;
+  const cs=getCostBand(capexCost[lk]||0,CAPEX_T).score;
+  const all=[ts,...reg,os,cs]; // 10 factors
+  return Math.round(all.reduce((a,b)=>a+b,0)/all.length*10)/10;
+}
+
+function delayToScore(m){if(m<=6)return 5;if(m<=12)return 4;if(m<=18)return 3;if(m<=24)return 2;return 1;}
+function sliderGrad(m){const p=Math.round(m/36*100);const c=m<=6?'#2E7D32':m<=12?'#7CB342':m<=18?'#F57F17':m<=24?'#E65100':'#C62828';return`linear-gradient(to right,${c} 0%,${c} ${p}%,#ddd ${p}%,#ddd 100%)`;}
+function delayCol(m){if(m<=6)return'var(--green)';if(m<=12)return'var(--lgreen)';if(m<=18)return'var(--yellow)';if(m<=24)return'var(--orange)';return'var(--red)';}
+
+function riskScore(sid,l,oid){const lk=lineKey(sid,l,oid);return(riskP[lk]||4)*(riskI[lk]||4);}
+function rskCls(rs){if(rs<=25)return'rsk-low';if(rs<=49)return'rsk-med';if(rs<=74)return'rsk-high';return'rsk-crit';}
+function rskLabel(rs){if(rs<=25)return'Low';if(rs<=49)return'Med';if(rs<=74)return'High';return'Crit';}
+function hmRskDot(rs){if(rs<=25)return'hm-rsk hm-rsk-low';if(rs<=49)return'hm-rsk hm-rsk-med';if(rs<=74)return'hm-rsk hm-rsk-high';return'hm-rsk hm-rsk-crit';}
+
+function apCls(a){if(a>=4)return'ap-5';if(a>=3.5)return'ap-4';if(a>=2)return'ap-3';return'ap-2';}
+function hmCls(a){if(a>=4)return'hm-5';if(a>=3.5)return'hm-4';if(a>=2)return'hm-3';return'hm-1';}
+function dimSelCls(v){if(v>=4)return'd-5';if(v===3)return'd-3';if(v===2)return'd-2';return'd-1';}
+function ssCss(v){if(v>=4)return'color:var(--green)';if(v>=3)return'color:var(--yellow)';if(v>=2)return'color:var(--orange)';return'color:var(--red)';}
+
+function countRAG(oid){
+  let g=0,lg=0,o=0,r=0;
+  SITES.forEach(s=>s.lines.forEach(l=>{
+    const a=dimAvg(s.id,l,oid);
+    if(a>=4)g++;else if(a>=3.5)lg++;else if(a>=2)o++;else r++;
+  }));
+  return{g,lg,o,r};
+}
+function overallAvg(oid){
+  let t=0,n=0;
+  SITES.forEach(s=>s.lines.forEach(l=>{t+=dimAvg(s.id,l,oid);n++;}));
+  return n?Math.round(t/n*10)/10:3;
+}
+function avgRisk(oid){
+  let t=0,n=0;
+  SITES.forEach(s=>s.lines.forEach(l=>{t+=riskScore(s.id,l,oid);n++;}));
+  return n?Math.round(t/n):0;
+}
+function anySC(oid){
+  return SITES.some(s=>s.lines.some(l=>supplyFlag[lineKey(s.id,l,oid)]));
+}
+function getFinNet(oid){
+  const d=finData[oid];
+  const ext=(d.capexM||0)+(d.capexI||0)+(d.capexE||0)+(d.capexF||0);
+  return(d.baseCapex||0)+ext+(d.opex5||0)-(d.avoid||0);
+}
+function getBCRev(oid){return BCE.reduce((a,e)=>a+e.s10+(bcData[oid]?.[e.id]?.d||0),0);}
+
+// ═══════════════════════
+// COCKPIT KPI
+// ═══════════════════════
+function renderKPI(){
+  document.getElementById('kpi-hdr').innerHTML=
+    `<th class="rh">KPI</th>`+
+    OPTIONS.map(o=>`<th><span style="color:${o.color}">${o.label}</span><br/><span style="font-size:9px;opacity:.75;font-weight:400">${o.short}</span></th>`).join('');
+  const rows=[
+    {l:'Anzahl ≥4.0 Green',     f:o=>`<span class="kpi-num" style="color:var(--green)">${countRAG(o.id).g}</span>`},
+    {l:'Anzahl 3.5–4.0 Lt.Green',f:o=>`<span class="kpi-num" style="color:var(--lgreen)">${countRAG(o.id).lg}</span>`},
+    {l:'Anzahl <3.5 Orange',    f:o=>`<span class="kpi-num" style="color:var(--orange)">${countRAG(o.id).o}</span>`},
+    {l:'Anzahl <2.0 Red',       f:o=>`<span class="kpi-num" style="color:var(--red)">${countRAG(o.id).r}</span>`},
+    {l:'Avg Impact Score',      f:o=>{const a=overallAvg(o.id);return`<span class="avg-pill ${apCls(a)}">${a}</span>`;}},
+    {l:'Avg Risk Score (P×I)',  f:o=>{const rs=avgRisk(o.id);return`<span class="rsk-pill ${rskCls(rs)}">${rs}</span>`;}},
+    {l:'SC Conflict',           f:o=>{const sc=anySC(o.id);return sc?`<span class="tag tr">🚚 Conflict</span>`:`<span class="tag tn">✔ No conflict</span>`;}},
+    {l:'BC Preservation',       f:o=>{const p=Math.round(getBCRev(o.id)/BC_TOT*100);return`<span class="tag ${p>=90?'tg':p>=60?'ty':'tr'}">${p}%</span>`;}},
+    {l:'ΔCapEx Ext. (kCHF)',    f:o=>{const d=finData[o.id],v=(d.capexM||0)+(d.capexI||0)+(d.capexE||0)+(d.capexF||0);return v?`<b>${v.toLocaleString()}</b>`:'<span style="color:var(--gray)">—</span>';}},
+    {l:'Timeline gehalten?',    f:o=>`<span class="tag ${kpiMeta[o.id].timeline==='Ja'?'tg':'tr'}">${kpiMeta[o.id].timeline}</span>`},
+    {l:'Harmonisierung?',       f:o=>`<span class="tag ${kpiMeta[o.id].harm==='Ja'?'tg':'tr'}">${kpiMeta[o.id].harm}</span>`},
+  ];
+  const tbody=document.getElementById('kpi-body');tbody.innerHTML='';
+  rows.forEach(row=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td class="rh">${row.l}</td>`+OPTIONS.map(o=>`<td>${row.f(o)}</td>`).join('');
+    tbody.appendChild(tr);
+  });
+  const er=document.createElement('tr');er.style.background='#F5F0FF';
+  er.innerHTML=`<td class="rh" style="font-weight:700;color:var(--roche-dark)">Empfehlung</td>`+
+    OPTIONS.map(o=>`<td class="emp-cell" style="color:${o.color};font-weight:600">${kpiMeta[o.id].empf||'—'}</td>`).join('');
+  tbody.appendChild(er);
+}
+
+// ═══════════════════════
+// HEATMAP
+// ═══════════════════════
+function renderHM(){
+  document.getElementById('hm-hdr').innerHTML=
+    `<th class="lh" style="width:60px">Site</th><th class="lh" style="width:100px">Line</th>`+
+    OPTIONS.map(o=>`<th>${o.label}<br/><span style="font-size:9px;opacity:.8;font-weight:400">${o.name}</span></th>`).join('');
+  const tbody=document.getElementById('hm-body');tbody.innerHTML='';
+  SITES.forEach(s=>{
+    s.lines.forEach((l,li)=>{
+      const tr=document.createElement('tr');
+      const std=li===0
+        ?`<td class="site-c" rowspan="${s.lines.length}" style="color:${s.color};border-top:2px solid ${s.color}30">${s.name}${s.capex?`<br/><span style="font-size:9px;font-weight:400;color:var(--text-m)">${s.capex}</span>`:''}</td>`:'';
+      const cells=OPTIONS.map(o=>{
+        const lk=lineKey(s.id,l,o.id);
+        const a=dimAvg(s.id,l,o.id);
+        const rs=riskScore(s.id,l,o.id);
+        const sf=supplyFlag[lk];
+        return`<td class="hm-cell"><div class="hm-inner ${hmCls(a)}">
+          <span>${a}</span>
+          <div class="${hmRskDot(rs)}" title="Risk P×I=${rs} (${rskLabel(rs)})"></div>
+          ${sf?`<span class="hm-sc">🚚</span>`:''}
+        </div></td>`;
+      }).join('');
+      tr.innerHTML=`${std}<td class="line-c">${l}</td>${cells}`;
+      tbody.appendChild(tr);
+    });
+  });
+}
+
+// ═══════════════════════
+// SITE IMPACT TABLE
+// ═══════════════════════
+function renderOptSel(){
+  document.getElementById('opt-sel').innerHTML=
+    OPTIONS.map(o=>`<button class="opt-btn ${o.id===curOpt?'active':''}"
+      style="${o.id===curOpt?`background:${o.color};border-color:${o.color}`:''}"
+      onclick="setCurOpt('${o.id}')">${o.label}: ${o.name}</button>`).join('');
+}
+function setCurOpt(oid){curOpt=oid;renderOptSel();renderSIT();}
+
+function renderSIT(){
+  const opt=OPTIONS.find(o=>o.id===curOpt);
+  document.getElementById('sit-title').textContent=`${opt.label}: ${opt.name}`;
+
+  document.getElementById('sit-hdr').innerHTML=
+    `<th class="lh" style="width:65px">Site</th>
+     <th class="lh" style="width:100px">Line</th>
+     <th style="min-width:108px">Time<br/><span style="font-size:8px;opacity:.8">0–36m → score</span></th>
+     ${DIMS.map(d=>`<th title="${d.desc}">${d.label}</th>`).join('')}
+     <th style="min-width:96px">OpEx Cost<br/><span style="font-size:8px;opacity:.8">kCHF → score</span></th>
+     <th style="min-width:96px">CapEx Cost<br/><span style="font-size:8px;opacity:.8">kCHF → score</span></th>
+     <th style="width:48px">P</th>
+     <th style="width:48px">I</th>
+     <th style="width:60px">Risk</th>
+     <th style="width:52px">Avg</th>
+     <th style="width:50px">SC</th>
+     <th style="min-width:196px;background:#F5F0FF;color:var(--roche-dark)">Risk Details (per site)</th>`;
+
+  const tbody=document.getElementById('sit-body');tbody.innerHTML='';
+
+  SITES.forEach(s=>{
+    const nLines=s.lines.length;
+    const oid=curOpt;
+    const siteRN=siteRiskNote[siteKey(s.id,oid)]||'';
+    const lineRiskSummary=s.lines.map(l=>{const rs=riskScore(s.id,l,oid);return{line:l,rs};});
+
+    s.lines.forEach((l,li)=>{
+      const lk=lineKey(s.id,l,oid);
+      const dm=delayMonths[lk]??12;
+      const ts=delayToScore(dm);
+      const oc=opexCost[lk]||0;
+      const cc=capexCost[lk]||0;
+      const oRes=getCostBand(oc,OPEX_T);
+      const cRes=getCostBand(cc,CAPEX_T);
+      const p=riskP[lk]||4;
+      const i=riskI[lk]||4;
+      const rs=riskScore(s.id,l,oid);
+      const sf=supplyFlag[lk];
+      const a=dimAvg(s.id,l,oid);
+
+      // Unique element IDs based on encoded key (no special chars)
+      const eid=`${s.id}__${l.replace(/[^a-zA-Z0-9]/g,'X')}__${oid}`;
+
+      const tr=document.createElement('tr');
+
+      const stTd=li===0
+        ?`<td class="site-td" rowspan="${nLines}" style="color:${s.color}">${s.name}${s.capex?`<br/><span style="font-size:9px;color:var(--text-m);font-weight:400">${s.capex}</span>`:''}</td>`:'';
+
+      // Time slider cell
+      const timeTd=`<td class="${dimSelCls(ts)}" id="tcell-${eid}" style="padding:4px">
+        <div class="time-cell-wrap">
+          <input type="range" class="delay-slider" min="0" max="36" value="${dm}"
+            style="background:${sliderGrad(dm)}"
+            oninput="onDelay('${s.id}','${l}','${oid}','${eid}',this.value)"/>
+          <span class="delay-label" id="dlbl-${eid}" style="color:${delayCol(dm)}">${dm}m → ${ts}</span>
+        </div>
+      </td>`;
+
+      // Dim cells
+      const regCells=DIMS.map(d=>{
+        const v=dimScores[dimKey(s.id,l,oid,d.id)]||3;
+        return`<td class="${dimSelCls(v)}" id="dcell-${eid}-${d.id}" title="${d.desc}">
+          <select class="ss" style="${ssCss(v)}"
+            onchange="onDim('${s.id}','${l}','${oid}','${eid}','${d.id}',this)">
+            ${[1,2,3,4,5].map(n=>`<option value="${n}" ${v==n?'selected':''}>${n}</option>`).join('')}
+          </select>
+        </td>`;
+      }).join('');
+
+      // OpEx cost cell — ID-based update, no DOM traversal
+      const opexTd=`<td class="${oRes.cls}" id="ocell-${eid}" style="padding:4px 5px">
+        <div class="cost-wrap">
+          <input type="number" min="0" step="1" value="${oc||''}" placeholder="0 kCHF"
+            class="cost-inp ${oRes.icls}" id="oinp-${eid}"
+            title="${oRes.lbl}"
+            onchange="onCost('${s.id}','${l}','${oid}','${eid}','opex',this.value)"/>
+          <span class="cost-score-lbl" id="olbl-${eid}" style="${ssCss(oRes.score)}">Score: ${oRes.score} — ${oRes.lbl}</span>
+        </div>
+      </td>`;
+
+      // CapEx cost cell — ID-based update
+      const capexTd=`<td class="${cRes.cls}" id="ccell-${eid}" style="padding:4px 5px">
+        <div class="cost-wrap">
+          <input type="number" min="0" step="1" value="${cc||''}" placeholder="0 kCHF"
+            class="cost-inp ${cRes.icls}" id="cinp-${eid}"
+            title="${cRes.lbl}"
+            onchange="onCost('${s.id}','${l}','${oid}','${eid}','capex',this.value)"/>
+          <span class="cost-score-lbl" id="clbl-${eid}" style="${ssCss(cRes.score)}">Score: ${cRes.score} — ${cRes.lbl}</span>
+        </div>
+      </td>`;
+
+      // P / I / Risk score
+      const pSel=`<td style="text-align:center">
+        <select class="pi-sel" onchange="onP('${s.id}','${l}','${oid}','${eid}',this)">
+          ${PI_VALS.map(n=>`<option value="${n}" ${p==n?'selected':''}>${n}</option>`).join('')}
+        </select>
+      </td>`;
+      const iSel=`<td style="text-align:center">
+        <select class="pi-sel" onchange="onI('${s.id}','${l}','${oid}','${eid}',this)">
+          ${PI_VALS.map(n=>`<option value="${n}" ${i==n?'selected':''}>${n}</option>`).join('')}
+        </select>
+      </td>`;
+      const rsPill=`<td style="text-align:center">
+        <span class="rsk-pill ${rskCls(rs)}" id="rsp-${eid}">${rs}</span>
+      </td>`;
+
+      // Avg pill
+      const avgPill=`<td style="text-align:center">
+        <span class="avg-pill ${apCls(a)}" id="ap-${eid}">${a}</span>
+      </td>`;
+
+      // SC flag button
+      const scBtn=`<td style="text-align:center;padding:3px">
+        <button class="sf-btn ${sf?'sf-on':'sf-off'}" id="sfbtn-${eid}"
+          onclick="onSF('${s.id}','${l}','${oid}','${eid}',this)">🚚</button>
+      </td>`;
+
+      // Site Risk Box — rowspan = nLines, only on first line
+      const riskBoxTd=li===0?`<td class="risk-box-td" rowspan="${nLines}">
+        <div class="site-risk-box">
+          <div class="srb-title" style="color:${s.color}">📋 ${s.name} Risk Details</div>
+          <div class="srb-label">Per-line risk scores (P×I)</div>
+          <div class="srb-scores" id="srbscores-${s.id}-${oid}">
+            ${lineRiskSummary.map(lr=>`<span class="rsk-pill ${rskCls(lr.rs)}" style="font-size:9px">${lr.line}: ${lr.rs}</span>`).join('')}
+          </div>
+          <div class="srb-label" style="margin-top:5px">Risk description &amp; mitigation</div>
+          <textarea class="srb-note"
+            placeholder="Key risks, dependencies and mitigations for ${s.name} — ${opt.label}…"
+            onchange="siteRiskNote[siteKey('${s.id}','${oid}')]=this.value">${siteRN}</textarea>
+        </div>
+      </td>`:'';
+
+      tr.innerHTML=`${stTd}<td class="line-td">${l}</td>${timeTd}${regCells}${opexTd}${capexTd}${pSel}${iSel}${rsPill}${avgPill}${scBtn}${riskBoxTd}`;
+      tbody.appendChild(tr);
+    });
+  });
+}
+
+// ════════════════════════════════════════
+// UPDATE HANDLERS — all ID-based, no DOM traversal
+// ════════════════════════════════════════
+
+// Refresh avg pill and cockpit for a given line
+function refreshAvg(sid,l,oid,eid){
+  const a=dimAvg(sid,l,oid);
+  const pill=document.getElementById(`ap-${eid}`);
+  if(pill){pill.textContent=a;pill.className=`avg-pill ${apCls(a)}`;}
+  renderKPI();renderHM();
+}
+
+function onDelay(sid,l,oid,eid,val){
+  const dm=parseInt(val);
+  const lk=lineKey(sid,l,oid);
+  delayMonths[lk]=dm;
+  const ts=delayToScore(dm);
+  // Update slider gradient
+  const sldr=document.querySelector(`#tcell-${eid} .delay-slider`);
+  if(sldr)sldr.style.background=sliderGrad(dm);
+  // Update label
+  const lbl=document.getElementById(`dlbl-${eid}`);
+  if(lbl){lbl.textContent=`${dm}m → ${ts}`;lbl.style.color=delayCol(dm);}
+  // Update cell bg
+  const cell=document.getElementById(`tcell-${eid}`);
+  if(cell)cell.className=dimSelCls(ts);
+  refreshAvg(sid,l,oid,eid);
+}
+
+function onDim(sid,l,oid,eid,did,sel){
+  const v=parseInt(sel.value);
+  dimScores[dimKey(sid,l,oid,did)]=v;
+  sel.style.cssText=ssCss(v);
+  const cell=document.getElementById(`dcell-${eid}-${did}`);
+  if(cell)cell.className=dimSelCls(v);
+  refreshAvg(sid,l,oid,eid);
+}
+
+function onCost(sid,l,oid,eid,type,val){
+  const lk=lineKey(sid,l,oid);
+  const v=Math.max(0,parseFloat(val)||0);
+  const thresholds=type==='opex'?OPEX_T:CAPEX_T;
+  const prefix=type==='opex'?'o':'c';
+
+  if(type==='opex')opexCost[lk]=v;
+  else capexCost[lk]=v;
+
+  const res=getCostBand(v,thresholds);
+
+  // Update cell background
+  const cell=document.getElementById(`${prefix}cell-${eid}`);
+  if(cell)cell.className=res.cls;
+
+  // Update input colour class
+  const inp=document.getElementById(`${prefix}inp-${eid}`);
+  if(inp){
+    inp.className=`cost-inp ${res.icls}`;
+  }
+
+  // Update score label
+  const lbl=document.getElementById(`${prefix}lbl-${eid}`);
+  if(lbl){
+    lbl.textContent=`Score: ${res.score} — ${res.lbl}`;
+    lbl.style.cssText=ssCss(res.score);
+  }
+
+  // Refresh avg (cost score is now included)
+  refreshAvg(sid,l,oid,eid);
+}
+
+function onP(sid,l,oid,eid,sel){
+  const lk=lineKey(sid,l,oid);
+  riskP[lk]=parseInt(sel.value);
+  refreshRisk(sid,l,oid,eid);
+}
+function onI(sid,l,oid,eid,sel){
+  const lk=lineKey(sid,l,oid);
+  riskI[lk]=parseInt(sel.value);
+  refreshRisk(sid,l,oid,eid);
+}
+function refreshRisk(sid,l,oid,eid){
+  const rs=riskScore(sid,l,oid);
+  const pill=document.getElementById(`rsp-${eid}`);
+  if(pill){pill.textContent=rs;pill.className=`rsk-pill ${rskCls(rs)}`;}
+  // Refresh site risk box scores
+  const s=SITES.find(x=>x.id===sid);
+  if(s){
+    const sbox=document.getElementById(`srbscores-${sid}-${oid}`);
+    if(sbox){
+      sbox.innerHTML=s.lines.map(ln=>{
+        const r=riskScore(sid,ln,oid);
+        return`<span class="rsk-pill ${rskCls(r)}" style="font-size:9px">${ln}: ${r}</span>`;
+      }).join('');
+    }
+  }
+  renderKPI();renderHM();
+}
+
+function onSF(sid,l,oid,eid,btn){
+  const lk=lineKey(sid,l,oid);
+  supplyFlag[lk]=!supplyFlag[lk];
+  const f=supplyFlag[lk];
+  btn.className=`sf-btn ${f?'sf-on':'sf-off'}`;
+  // SC does NOT affect avg — only update cockpit display
+  renderKPI();renderHM();
+}
+
+// ═══════════════════════
+// FINANCIAL
+// ═══════════════════════
+function renderFin(){
+  const wrap=document.getElementById('fin-wrap');wrap.innerHTML='';
+  const sec=document.createElement('div');sec.className='sec';
+  const oh=OPTIONS.map(o=>`<th style="color:${o.color};text-align:right">${o.label}<br/><span style="font-size:9px;font-weight:400">${o.name}</span></th>`).join('');
+  const extRows=[
+    ['capexM','Missing Scope CapEx',  'Unspecified PharmaSuite scope items (kCHF)'],
+    ['capexI','Integration CapEx',    'Aspire/EWM/DCS/OT-layer delta (kCHF)'],
+    ['capexE','EoL Bridge CapEx',     'Legacy MES sustain or remediate (kCHF)'],
+    ['capexF','Infrastructure CapEx', 'Servers, network, validation (kCHF)'],
+  ];
+  sec.innerHTML=`<div class="sec-hdr"><div class="sec-title">Financial Delta Assessment (kCHF)</div></div>
+  <div class="sec-body"><table style="width:100%;border-collapse:collapse;font-size:11.5px">
+  <thead><tr><th style="text-align:left">Dimension</th><th style="text-align:left;width:200px">Description</th>${oh}</tr></thead>
+  <tbody>
+    <tr class="grp"><td colspan="${2+OPTIONS.length}">BASELINE CAPEX</td></tr>
+    <tr><td style="padding-left:14px;font-weight:600">Baseline CapEx (approved budget)</td>
+      <td style="font-size:10px;color:var(--text-s)">Approved program budget per option (kCHF)</td>
+      ${OPTIONS.map(o=>`<td style="text-align:right"><input class="fin-input" type="number" step="1" min="0" value="${finData[o.id].baseCapex||''}" placeholder="0" onchange="setFin('${o.id}','baseCapex',this.value)"/></td>`).join('')}
+    </tr>
+    <tr class="grp"><td colspan="${2+OPTIONS.length}">CAPEX EXTENSIONS</td></tr>
+    ${extRows.map(([fid,fn,fd])=>`<tr><td style="padding-left:14px">↳ ${fn}</td><td style="font-size:10px;color:var(--text-s)">${fd}</td>
+      ${OPTIONS.map(o=>`<td style="text-align:right"><input class="fin-input" type="number" step="1" min="0" value="${finData[o.id][fid]||''}" placeholder="0" onchange="setFin('${o.id}','${fid}',this.value)"/></td>`).join('')}</tr>`).join('')}
+    <tr style="background:var(--roche-light)"><td style="font-weight:700">Total CapEx</td><td style="font-size:10px">Baseline + extensions</td>
+      ${OPTIONS.map(o=>`<td class="comp" style="text-align:right" id="ftot-${o.id}">—</td>`).join('')}</tr>
+    <tr class="grp"><td colspan="${2+OPTIONS.length}">OPEX — INCREMENTAL (EXCL. RUN COSTS)</td></tr>
+    <tr><td style="padding-left:14px">↳ ΔOpEx 5-year</td><td style="font-size:10px;color:var(--text-s)">Incremental support, licensing, vendor costs</td>
+      ${OPTIONS.map(o=>`<td style="text-align:right"><input class="fin-input" type="number" step="1" value="${finData[o.id].opex5||''}" placeholder="0" onchange="setFin('${o.id}','opex5',this.value)"/></td>`).join('')}</tr>
+    <tr class="grp"><td colspan="${2+OPTIONS.length}">COST AVOIDANCE</td></tr>
+    <tr><td style="padding-left:14px">↳ Cost Avoidance</td><td style="font-size:10px;color:var(--text-s)">Harmonization + EoL risk avoidance + digital value</td>
+      ${OPTIONS.map(o=>`<td style="text-align:right"><input class="fin-input" type="number" step="1" value="${finData[o.id].avoid||''}" placeholder="0" onchange="setFin('${o.id}','avoid',this.value)"/></td>`).join('')}</tr>
+    <tr style="background:var(--gbg)"><td style="font-weight:700">NET POSITION</td><td style="font-size:10px">Total CapEx + ΔOpEx − Cost Avoidance</td>
+      ${OPTIONS.map(o=>`<td class="comp" style="text-align:right;font-weight:700" id="fnet-${o.id}">—</td>`).join('')}</tr>
+    <tr class="grp"><td colspan="${2+OPTIONS.length}">METADATA</td></tr>
+    <tr><td>Confidence</td><td style="font-size:10px;color:var(--text-s)">Hoch / Mittel / Grob</td>
+      ${OPTIONS.map(o=>`<td><select style="border:1px solid var(--bd-m);border-radius:4px;padding:3px 5px;font-size:11px;font-family:var(--font)" onchange="setFin('${o.id}','confid',this.value)">
+        <option ${finData[o.id].confid==='Hoch'?'selected':''}>Hoch</option>
+        <option ${finData[o.id].confid==='Mittel'?'selected':''}>Mittel</option>
+        <option ${finData[o.id].confid==='Grob'?'selected':''}>Grob</option>
+      </select></td>`).join('')}</tr>
+    <tr><td>Assumption</td><td style="font-size:10px;color:var(--text-s)">Key assumption</td>
+      ${OPTIONS.map(o=>`<td><input style="border:1px solid var(--bd-l);border-radius:4px;padding:3px 6px;font-size:11px;width:100%;font-family:var(--font)" type="text" value="${finData[o.id].assumption||''}" placeholder="Enter assumption…" onchange="setFin('${o.id}','assumption',this.value)"/></td>`).join('')}</tr>
+  </tbody></table></div>`;
+  wrap.appendChild(sec);updateFinTotals();
+}
+function setFin(oid,f,v){finData[oid][f]=isNaN(parseFloat(v))?v:(parseFloat(v)||0);updateFinTotals();renderKPI();}
+function updateFinTotals(){
+  OPTIONS.forEach(o=>{
+    const d=finData[o.id];
+    const ext=(d.capexM||0)+(d.capexI||0)+(d.capexE||0)+(d.capexF||0);
+    const tot=(d.baseCapex||0)+ext;
+    const net=tot+(d.opex5||0)-(d.avoid||0);
+    const te=document.getElementById(`ftot-${o.id}`);
+    const ne=document.getElementById(`fnet-${o.id}`);
+    if(te)te.textContent=tot.toLocaleString()+' kCHF';
+    if(ne){ne.textContent=(net>0?'+':'')+net.toLocaleString()+' kCHF';ne.className='comp '+(net<=0?'nv':'pv');}
+  });
+}
+
+// ═══════════════════════
+// BC
+// ═══════════════════════
+function renderBCTabs(){
+  document.getElementById('bc-tabs').innerHTML=OPTIONS.map(o=>`<button class="otab ${o.id===curBcOpt?'active':''}"
+    style="${o.id===curBcOpt?`background:${o.color};border-color:${o.color}`:''}"
+    onclick="setCurBC('${o.id}')">${o.label}</button>`).join('');
+}
+function setCurBC(oid){curBcOpt=oid;renderBCTabs();renderBCTable();renderBCSummary();}
+function renderBCTable(){
+  const tbody=document.getElementById('bc-body'),tfoot=document.getElementById('bc-foot');
+  tbody.innerHTML='';
+  BCE.forEach(e=>{
+    const imp=bcData[curBcOpt][e.id];const rev=e.s10+(imp.d||0);
+    const tr=document.createElement('tr');if(imp.d)tr.style.background='#FFF8E1';
+    tr.innerHTML=`<td style="font-weight:600;font-size:11px">${e.label}</td>
+      <td><span class="rag ${e.type==='Benefit'?'r-green':'r-gray'}" style="font-size:9px">${e.type}</span></td>
+      <td style="text-align:right;font-style:italic;color:var(--text-s)">${e.s10.toLocaleString()}</td>
+      <td style="text-align:right"><input class="bc-di" type="number" step="1" value="${imp.d||''}" placeholder="0" onchange="setBCImp('${curBcOpt}','${e.id}',this.value)"/></td>
+      <td style="text-align:right;font-weight:700;color:${rev>=e.s10?'var(--green)':rev>=0?'var(--yellow)':'var(--red)'}">${rev.toLocaleString()}</td>
+      ${e.d.map(v=>`<td style="color:${v>0?'var(--green)':v<0?'var(--red)':'var(--text-m)'}">${v.toLocaleString()}</td>`).join('')}
+      <td><input style="border:1px solid var(--bd-l);border-radius:4px;padding:3px 6px;font-size:10px;width:100%;font-family:var(--font)" type="text" value="${imp.c||''}" placeholder="Comment…" onchange="setBCCom('${curBcOpt}','${e.id}',this.value)"/></td>`;
+    tbody.appendChild(tr);
+  });
+  const orig=BC_TOT,delta=BCE.reduce((a,e)=>a+(bcData[curBcOpt][e.id]?.d||0),0),rev=orig+delta;
+  const yt=Array.from({length:10},(_,i)=>BCE.reduce((a,e)=>a+e.d[i],0));
+  tfoot.innerHTML=`<tr style="background:var(--roche-light);font-weight:700"><td>TOTAL 10y</td><td></td>
+    <td style="text-align:right;color:var(--green)">${orig.toLocaleString()}</td>
+    <td style="text-align:right;color:${delta<=0?'var(--red)':'var(--green)'}">${delta>0?'+':''}${delta.toLocaleString()}</td>
+    <td style="text-align:right;color:${rev>=orig?'var(--green)':rev>=0?'var(--yellow)':'var(--red)'}">${rev.toLocaleString()}</td>
+    ${yt.map(t=>`<td style="color:${t>0?'var(--green)':t<0?'var(--red)':'var(--text-m)'}">${t.toLocaleString()}</td>`).join('')}
+    <td></td></tr>`;
+}
+function setBCImp(oid,eid,v){bcData[oid][eid].d=parseFloat(v)||0;renderBCTable();renderBCSummary();renderKPI();}
+function setBCCom(oid,eid,v){bcData[oid][eid].c=v;}
+function renderBCSummary(){
+  const rev=getBCRev(curBcOpt),d=rev-BC_TOT,p=Math.round(rev/BC_TOT*100);
+  const dv=document.getElementById('bc-dv');if(dv){dv.textContent=(d>0?'+':'')+d.toLocaleString();dv.style.color=d>=0?'#86EFAC':'#FCA5A5';}
+  const rv=document.getElementById('bc-rv');if(rv)rv.textContent=rev.toLocaleString();
+  const pv=document.getElementById('bc-pv');if(pv){pv.textContent=p+'%';pv.style.color=p>=90?'#86EFAC':p>=60?'#FDE68A':'#FCA5A5';}
+}
+
+// ═══════════════════════
+// CHARTS
+// ═══════════════════════
+let charts={};
+function dc(id){if(charts[id]){charts[id].destroy();delete charts[id];}}
+function renderCharts(){
+  dc('line');const lc=document.getElementById('lineChart');if(lc){
+    charts['line']=new Chart(lc,{type:'bar',data:{labels:OPTIONS.map(o=>o.label),datasets:[{
+      label:'Avg Impact Score',data:OPTIONS.map(o=>overallAvg(o.id)),
+      backgroundColor:OPTIONS.map(o=>{const a=overallAvg(o.id);return a>=4?'rgba(46,125,50,.85)':a>=3.5?'rgba(124,179,66,.85)':a>=2?'rgba(230,81,0,.85)':'rgba(198,40,40,.85)';}),
+      borderColor:OPTIONS.map(o=>o.color),borderWidth:2,borderRadius:5
+    }]},options:{responsive:true,maintainAspectRatio:false,animation:{duration:400},
+      plugins:{legend:{display:false}},scales:{y:{min:1,max:5,grid:RG},x:{grid:NG}}}});
+  }
+  dc('rag');const rc=document.getElementById('ragChart');if(rc){
+    charts['rag']=new Chart(rc,{type:'bar',data:{labels:OPTIONS.map(o=>o.label),datasets:[
+      {label:'≥4 Green',   data:OPTIONS.map(o=>countRAG(o.id).g), backgroundColor:'rgba(46,125,50,.85)',borderRadius:3},
+      {label:'3.5–4 Lt.G', data:OPTIONS.map(o=>countRAG(o.id).lg),backgroundColor:'rgba(124,179,66,.85)',borderRadius:3},
+      {label:'<3.5 Orange',data:OPTIONS.map(o=>countRAG(o.id).o), backgroundColor:'rgba(230,81,0,.85)',borderRadius:3},
+      {label:'<2 Red',     data:OPTIONS.map(o=>countRAG(o.id).r), backgroundColor:'rgba(198,40,40,.85)',borderRadius:3},
+    ]},options:{responsive:true,maintainAspectRatio:false,animation:{duration:400},
+      plugins:{legend:LB},scales:{x:{stacked:true,grid:NG},y:{stacked:true,grid:RG}}}});
+  }
+  dc('fin');const fc=document.getElementById('finChart');if(fc){
+    charts['fin']=new Chart(fc,{type:'bar',data:{labels:OPTIONS.map(o=>o.label),datasets:[
+      {label:'Baseline CapEx',  data:OPTIONS.map(o=>finData[o.id].baseCapex||0),backgroundColor:'rgba(21,101,192,.4)',borderRadius:3},
+      {label:'CapEx Extensions',data:OPTIONS.map(o=>{const d=finData[o.id];return(d.capexM||0)+(d.capexI||0)+(d.capexE||0)+(d.capexF||0);}),backgroundColor:toSolid('#1565C0'),borderRadius:3},
+      {label:'ΔOpEx 5y',        data:OPTIONS.map(o=>finData[o.id].opex5||0),backgroundColor:toSolid('#6A1B9A'),borderRadius:3},
+      {label:'Cost Avoidance',  data:OPTIONS.map(o=>-(finData[o.id].avoid||0)),backgroundColor:toSolid('#2E7D32'),borderRadius:3},
+    ]},options:{responsive:true,maintainAspectRatio:false,animation:{duration:400},
+      plugins:{legend:LB},scales:{x:{grid:NG},y:{grid:RG,title:{display:true,text:'kCHF'}}}}});
+  }
+  dc('bc');const bcc=document.getElementById('bcChart');if(bcc){
+    charts['bc']=new Chart(bcc,{type:'bar',data:{labels:OPTIONS.map(o=>o.label),datasets:[
+      {label:'Original 10y',data:OPTIONS.map(()=>BC_TOT),type:'line',borderColor:'#1565C0',backgroundColor:'transparent',borderWidth:2,tension:0,pointRadius:0},
+      {label:'Revised 10y', data:OPTIONS.map(o=>getBCRev(o.id)),backgroundColor:OPTIONS.map(o=>toSolid(o.color)),borderColor:OPTIONS.map(o=>o.color),borderWidth:1,borderRadius:3},
+    ]},options:{responsive:true,maintainAspectRatio:false,animation:{duration:400},
+      plugins:{legend:LB},scales:{x:{grid:NG},y:{grid:RG,title:{display:true,text:'kCHF'}}}}});
+  }
+}
+
+// ═══════════════════════
+// TAB SWITCHING
+// ═══════════════════════
+function switchTab(tabId){
+  document.querySelectorAll('.tc').forEach(e=>e.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(e=>e.classList.remove('active'));
+  const tc=document.getElementById('tab-'+tabId);
+  const tb=document.querySelector(`.tab[data-tab="${tabId}"]`);
+  if(tc)tc.classList.add('active');if(tb)tb.classList.add('active');
+  setTimeout(()=>{
+    if(tabId==='cockpit'){renderKPI();renderHM();}
+    if(tabId==='siteimpact'){renderOptSel();renderSIT();}
+    if(tabId==='financial'){renderFin();}
+    if(tabId==='bc'){renderBCTabs();renderBCTable();renderBCSummary();}
+    if(tabId==='charts'){renderCharts();}
+  },40);
+}
+
+// ═══════════════════════
+// EXPORT / RESET
+// ═══════════════════════
+function downloadHTML(){
+  const blob=new Blob([document.documentElement.outerHTML],{type:'text/html'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download=`ProMES_Cockpit_${new Date().toISOString().slice(0,10)}.html`;a.click();
+}
+function resetAll(){
+  if(!confirm('Reset all inputs to defaults?'))return;
+  initState();renderKPI();renderHM();renderOptSel();renderSIT();
+  renderFin();renderBCTabs();renderBCTable();renderBCSummary();renderCharts();
+}
+
+// ═══════════════════════
+// INIT
+// ═══════════════════════
+initState();
+renderKPI();renderHM();
+renderOptSel();renderSIT();
+renderFin();
+renderBCTabs();renderBCTable();renderBCSummary();
+setTimeout(renderCharts,150);
+</script>
+</body>
+</html>
+
+							<script>
+                            	const inp = scoreEl?.parentElement?.previousElementSibling; // ← broke silently
+const td  = inp.closest('td');                              // ← returned null
+							</script>
+                        </body>
+                        </html>
+                    
